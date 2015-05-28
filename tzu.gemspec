@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.version = '0.0.1.0'
   s.platform = Gem::Platform::RUBY
   s.authors = ['Morgan Bruce', 'Blake Turner']
-  s.description = 'Encapsulate your database queries with dynamically generated classes'
-  s.summary = 'Get is a library designed to encapsulate Rails database queries and prevent query pollution in the view layer.'
+  s.description = 'Tzu is a library for issuing commands in Ruby'
+  s.summary = "Standardise and encapsulate your application's actions"
   s.email = 'morgan@onfido.com'
   s.homepage = 'https://github.com/onfido/tzu'
   s.license = 'MIT'
