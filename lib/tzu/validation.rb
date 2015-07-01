@@ -32,7 +32,7 @@ module Tzu
     end
 
     def invalid!(obj)
-      output = [:errors, :messages].reduce(obj) do |result, m|
+      output = [:errors, :messages, :message].reduce(obj) do |result, m|
         result = result.respond_to?(m) ? result.send(m) : result
       end
 
