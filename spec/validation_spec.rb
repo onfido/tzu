@@ -23,28 +23,10 @@ describe Tzu::Validation do
     end
   end
 
-  context 'command defines valid? method' do
-    subject do
-      Class.new do
-        include Tzu
-
-        def valid?(params)
-          Tzu::ValidationResult.new(false, [])
-        end
-      end
-    end
-
-    it 'returns validation result' do
-      result = subject.run(nil)
-      expect(result).to have_attributes(success: false, type: :validation)
-    end
-  end
-
-  context 'error message is string' do
-    let(:str) { 'error_message' }
-    subject { Tzu::Invalid.new(str) }
-
-    context 'invoked directly' do
+  context 'invoked directly' do
+    context 'error message is string' do
+      let(:str) { 'error_message' }
+      subject { Tzu::Invalid.new(str) }
       it 'has string as #message' do
         expect(subject.message).to eq str
       end
@@ -53,20 +35,23 @@ describe Tzu::Validation do
         expect(subject.errors).to eq(errors: str)
       end
     end
+  end
 
-    context 'rescued' do
-      subject do
-        Class.new do
-          include Tzu
+  context 'rescued' do
+    subject do
+      Class.new do
+        include Tzu
 
-          def call(params)
-            raise StandardError.new(params[:message])
-          rescue StandardError => e
-            invalid! e
-          end
+        def call(params)
+          raise StandardError.new(params[:message])
+        rescue StandardError => e
+          invalid! e
         end
       end
+    end
 
+    context 'error message is string' do
+      let(:str) { 'error_message' }
       let(:params) { { message: str } }
 
       describe '#run' do

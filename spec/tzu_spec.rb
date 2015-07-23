@@ -25,6 +25,16 @@ class MyRequestObject
   end
 end
 
+class VirtusRequestObject
+  include Virtus.model
+  include ActiveModel::Validations
+
+  validates :name, :age, presence: :true
+
+  attribute :name, String
+  attribute :age, Integer
+end
+
 class ValidatedCommand
   include Tzu
 
@@ -32,6 +42,16 @@ class ValidatedCommand
 
   def call(request)
     request.value
+  end
+end
+
+class VirtusValidatedCommand
+  include Tzu
+
+  given VirtusRequestObject
+
+  def call(request)
+    "Name: #{request.name}, Age: #{request.age}"
   end
 end
 
@@ -136,7 +156,7 @@ describe Tzu do
     context 'when request is invalid' do
       let(:outcome) { ValidatedCommand.run(value: 2222, valid: false) }
 
-      it 'executes successfully' do
+      it 'does not execute successfully' do
         expect(outcome.failure?).to be true
       end
 
@@ -146,6 +166,30 @@ describe Tzu do
 
       it 'returns error string as errors hash' do
         expect(outcome.result).to eq(errors: 'Error Message')
+      end
+    end
+
+    context 'with virtus/active_model request object' do
+      let(:outcome) { VirtusValidatedCommand.run(params) }
+
+      context 'when request is valid' do
+        let(:params) { { name: 'Young Tzu', age: '19' } }
+
+        it 'executes successfully' do
+          expect(outcome.success?).to be true
+        end
+      end
+
+      context 'when request is invalid' do
+        let(:params) { { name: 'My Name' } }
+
+        it 'does not execute successfully' do
+          expect(outcome.failure?).to be true
+        end
+
+        it 'returns ActiveModel error object' do
+          expect(outcome.result).to eq(age: ["can't be blank"])
+        end
       end
     end
   end

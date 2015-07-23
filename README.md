@@ -57,7 +57,31 @@ When invoking Tzu with `#run!`, `invalid!` will throw a Tzu::Invalid error.
 outcome = MyCommand.run!(message: 'Hello!') #=> Tzu::Invalid: 'You did not do it'
 ```
 
-Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form `{ errors: 'Error String' }`.
+If you use `invalid!` while catching an exception, you can pass it the exception as an argument.
+The exception's `#message` value will be passed along the the outcome.
+
+```ruby
+class MyRescueCommand
+  include Tzu
+
+  def call(params)
+    take_action(params)
+  rescue StandardError => e
+    invalid!(e)
+  end
+end
+```
+
+```ruby
+outcome = MyRescueCommand.run!(params_that_cause_error) #=> Tzu::Invalid: 'You did not do it'
+```
+
+Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form.
+
+```
+{ errors: 'Error String' }
+```
+
 Any other type will simply be passed through.
 
 ## Passing Blocks
