@@ -39,5 +39,8 @@ module Tzu
       raise Invalid.new(output)
     end
 
+    def fail!(type, data = {})
+      raise Failure.new(type, data)
+    end
   end
 end

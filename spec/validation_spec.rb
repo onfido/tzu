@@ -6,7 +6,6 @@ describe Tzu::Validation do
     subject do
       Class.new do
         include Tzu
-        include Tzu::Validation
       end
     end
 
@@ -28,7 +27,6 @@ describe Tzu::Validation do
     subject do
       Class.new do
         include Tzu
-        include Tzu::Validation
 
         def valid?(params)
           Tzu::ValidationResult.new(false, [])
@@ -60,31 +58,32 @@ describe Tzu::Validation do
       subject do
         Class.new do
           include Tzu
-          include Tzu::Validation
 
           def call(params)
-            raise StandardError.new(params)
+            raise StandardError.new(params[:message])
           rescue StandardError => e
             invalid! e
           end
         end
       end
 
+      let(:params) { { message: str } }
+
       describe '#run' do
         it 'returns error hash as result' do
-          outcome = subject.run(str)
+          outcome = subject.run(params)
           expect(outcome.result).to eq(errors: str)
         end
       end
 
       describe '#run!' do
         it 'has string as #message' do
-          expect { subject.run!(str) }.to raise_error Tzu::Invalid, str
+          expect { subject.run!(params) }.to raise_error Tzu::Invalid, str
         end
 
         it 'has string as #errors' do
           begin
-            subject.run!(str)
+            subject.run!(params)
             expect(false).to be true # Should never reach this
           rescue Tzu::Invalid => e
             expect(e.errors).to eq(errors: str)
