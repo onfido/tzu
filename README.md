@@ -15,6 +15,7 @@ end
 ```
 
 Tzu exposes `#run` at the class level, and returns an Outcome object.
+The Outcome's `result` will be the return value of the command's `#call` method.
 
 ```ruby
 outcome = MyCommand.run(message: 'Hello!')
@@ -25,8 +26,9 @@ outcome.failure? #=> false
 outcome.result #=> 'My Command Response - Hello!'
 ```
 
-Tzu also provides an `invalid!` method that allows you to elegantly escape execution.
+## Validation
 
+Tzu also provides an `invalid!` method that allows you to elegantly escape execution.
 
 ```ruby
 class MyCommand
@@ -51,14 +53,17 @@ outcome.result #=> { errors: 'You did not do it' }
 
 When invoking Tzu with `#run!`, `invalid!` will throw a Tzu::Invalid error.
 
-Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form `{ errors: 'Error String' }`.
-Any other type will simply be passed through.
-
 ```ruby
 outcome = MyCommand.run!(message: 'Hello!') #=> Tzu::Invalid: 'You did not do it'
 ```
 
+Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form `{ errors: 'Error String' }`.
+Any other type will simply be passed through.
+
+## Passing Blocks
+
 You can also pass a block to Tzu commands.
+
 Successful commands will execute the `success` block, and invalid commands will execute the `invalid` block.
 This is particularly useful in controllers.
 
@@ -88,7 +93,10 @@ class MyValidatedCommand
 end
 ```
 
+## Request objects
+
 Request objects must implement an initializer that accepts the command's parameters hash.
+
 If you wish to validate your parameters, the Request object must implement `#valid?` and `#errors`.
 
 ```ruby
@@ -108,6 +116,7 @@ end
 ```
 
 A very useful combination for request objects is Virtus.model and ActiveModel::Validations.
+
 ActiveModel::Validations exposes all of the validators used on Rails models.
 Virtus.model validates the types of your inputs, and also makes them available via dot notation.
 
@@ -122,7 +131,8 @@ class MyRequestObject
 end
 ```
 
-If your request object is invalid, Tzu will return an invalid outcome before reaching the `#call` method. The invalid Outcome's result is populated by the request object's `#errors` method.
+If your request object is invalid, Tzu will return an invalid outcome before reaching the `#call` method.
+The invalid Outcome's result is populated by the request object's `#errors` method.
 
 ```ruby
 class MyValidatedCommand
