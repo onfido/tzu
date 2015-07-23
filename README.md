@@ -76,7 +76,7 @@ end
 outcome = MyRescueCommand.run!(params_that_cause_error) #=> Tzu::Invalid: 'You did not do it'
 ```
 
-Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form.
+Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form:
 
 ```
 { errors: 'Error String' }
@@ -103,6 +103,8 @@ MyCommand.run(message: params[:message]) do
 end
 ```
 
+## Request objects
+
 You can define a request object for your command using the `#given` method.
 
 ```ruby
@@ -116,8 +118,6 @@ class MyValidatedCommand
   end
 end
 ```
-
-## Request objects
 
 Request objects must implement an initializer that accepts the command's parameters hash.
 
