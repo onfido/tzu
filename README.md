@@ -65,7 +65,7 @@ class MyRescueCommand
   include Tzu
 
   def call(params)
-    take_action(params)
+    raise StandardError.new('You did not do it')
   rescue StandardError => e
     invalid!(e)
   end
@@ -89,7 +89,7 @@ Any other type will simply be passed through.
 You can also pass a block to Tzu commands.
 
 Successful commands will execute the `success` block, and invalid commands will execute the `invalid` block.
-This is particularly useful in controllers.
+This is particularly useful in controllers:
 
 ```ruby
 MyCommand.run(message: params[:message]) do
@@ -103,15 +103,62 @@ MyCommand.run(message: params[:message]) do
 end
 ```
 
+## Hooks
+
+Tzu commands accept `before`, `after`, and `around` hooks.
+All hooks are executed in the order they are declared.
+
+```ruby
+class MyCommand
+  include Tzu
+
+  around do |command|
+    puts 'Begin Around 1'
+    command.call
+    puts 'End Around 1'
+  end
+
+  around do |command|
+    puts 'Begin Around 2'
+    command.call
+    puts 'End Around 2'
+  end
+
+  before { puts 'Before 1' }
+  before { puts 'Before 2' }
+
+  after { puts 'After 1' }
+  after { puts 'After 2' }
+
+  def call(params)
+    puts "My Command Response - #{params[:message]}"
+  end
+end
+
+MyCommand.run(message: 'Hello!')
+
+#=> Begin Around 1
+#=> Begin Around 2
+#=> Before 1
+#=> Before 2
+#=> My Command Response - Hello!
+#=> After 1
+#=> After 2
+#=> End Around 2
+#=> End Around 1
+```
+
+
+
 ## Request objects
 
-You can define a request object for your command using the `#given` method.
+You can define a request object for your command using the `#request_object` method.
 
 ```ruby
 class MyValidatedCommand
   include Tzu, Tzu::Validation
 
-  given MyRequestObject
+  request_object MyRequestObject
 
   def call(request)
     "Name: #{request.name}, Age: #{request.age}"
@@ -162,7 +209,7 @@ The invalid Outcome's result is populated by the request object's `#errors` meth
 class MyValidatedCommand
   include Tzu, Tzu::Validation
 
-  given MyRequestObject
+  request_object MyRequestObject
 
   def call(request)
     "Name: #{request.name}, Age: #{request.age}"
@@ -175,4 +222,174 @@ outcome = MyValidatedCommand.run(name: 'Charles')
 outcome.success? #=> false
 outcome.type? #=> :validation
 outcome.result #=> {:age=>["can't be blank"]}
+```
+
+# Configure a sequence of Tzu commands
+
+Tzu provides a declarative way of encapsulating sequential command execution.
+
+Consider the following commands:
+
+```ruby
+class SayMyName
+  include Tzu
+
+  def call(params)
+    "Hello, #{params[:name]}"
+  end
+end
+
+class MakeMeSoundImportant
+  include Tzu
+
+  def call(params)
+    "#{params[:boring_message]}! You are the most important citizen of #{params[:country]}!"
+  end
+end
+```
+
+The Tzu::Sequence provides a DSL for executing them in sequence.
+
+```ruby
+class ProclaimMyImportance
+  include Tzu::Sequence
+
+  step SayMyName do
+    receives do |params|
+      { name: params[:name] }
+    end
+  end
+
+  step MakeMeSoundImportant do
+    receives do |params, prior_results|
+      {
+        boring_message: prior_results[:say_my_name],
+        country: params[:country]
+      }
+    end
+  end
+end
+```
+
+Each command to be executed is defined as the first argument of `step`.
+The `receives` method inside the `step` block allows you to mutate the parameters being passed into the command.
+It is passed both the original parameters and a hash containing the results of prior commands.
+
+By default, the keys of the prior commands hash are underscored/symbolized command names.
+You can define your own keys using the `as` method.
+
+```ruby
+step SayMyName do
+  as :first_command_key
+  receives do |params|
+    { name: params[:name] }
+  end
+end
+```
+
+# Executing the sequence
+
+By default, Sequences return the result of the final command within an Outcome object,
+
+```ruby
+outcome = ProclaimMyImportance.run(name: 'Jessica', country: 'Azerbaijan')
+outcome.success? #=> true
+outcome.result #=> 'Hello, Jessica! You are the most important citizen of Azerbaijan!'
+```
+
+Sequences can be configured to return the entire `prior_results` hash by passing `:take_all` to the `result` method.
+
+```ruby
+class ProclaimMyImportance
+  include Tzu::Sequence
+
+  step SayMyName do
+    receives do |params|
+      { name: params[:name] }
+    end
+  end
+
+  step MakeMeSoundImportant do
+    receives do |params, prior_results|
+      {
+        boring_message: prior_results[:say_my_name],
+        country: params[:country]
+      }
+    end
+  end
+
+  result :take_all
+end
+
+outcome = ProclaimMyImportance.run(name: 'Jessica', country: 'Azerbaijan')
+outcome.result
+#=> { say_my_name: 'Hello, Jessica', make_me_sound_important: 'Hello, Jessica! You are the most important citizen of Azerbaijan!' }
+```
+
+You can also mutate the result into any form you choose by passing a block to `result`.
+
+```ruby
+class ProclaimMyImportance
+  include Tzu::Sequence
+
+  step SayMyName do
+    receives do |params|
+      { name: params[:name] }
+    end
+  end
+
+  step MakeMeSoundImportant do
+    as :final_command
+    receives do |params, prior_results|
+      {
+        boring_message: prior_results[:say_my_name],
+        country: params[:country]
+      }
+    end
+  end
+
+  result do |params, prior_results|
+    {
+      name: params[:name],
+      original_message: prior_results[:say_my_name],
+      message: "BULLETIN: #{prior_results[:final_command]}"
+    }
+  end
+end
+
+outcome = ProclaimMyImportance.run(name: 'Jessica', country: 'Azerbaijan')
+outcome.result
+#=> { name: 'Jessica', original_message: 'Hello, Jessica', message: 'BULLETIN: Hello, Jessica! You are the most important citizen of Azerbaijan!' }
+```
+
+# Hooks for Sequences
+
+Tzu sequences have the same `before`, `after`, and `around` hooks available in Tzu commands.
+This is particularly useful for wrapping multiple commands in a transaction.
+
+```ruby
+class ProclaimMyImportance
+  include Tzu::Sequence
+
+  around do |sequence|
+    ActiveRecord::Base.transaction do
+      sequence.call
+    end
+  end
+
+  step SayMyName do
+    receives do |params|
+      { name: params[:name] }
+    end
+  end
+
+  step MakeMeSoundImportant do
+    receives do |params, prior_results|
+      {
+        boring_message: prior_results[:say_my_name],
+        country: params[:country]
+      }
+    end
+  end
+end
 ```

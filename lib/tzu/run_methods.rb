@@ -1,6 +1,6 @@
 module Tzu
   module RunMethods
-    attr_reader :request_object
+    attr_reader :request_klass
 
     def run(params, *context, &block)
       result = get_instance(*context).run(params)
@@ -26,7 +26,7 @@ module Tzu
     end
 
     def method_missing(method, *args, &block)
-      @request_object = args.first if method == :given
+      @request_klass = args.first if method == :request_object
     end
   end
 end

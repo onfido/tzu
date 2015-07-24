@@ -1,9 +1,11 @@
+require 'tzu/core_extensions/string'
 require 'tzu/run_methods'
 require 'tzu/failure'
 require 'tzu/hooks'
 require 'tzu/invalid'
 require 'tzu/match'
-require 'tzu/organizer'
+require 'tzu/sequence'
+require 'tzu/step'
 require 'tzu/outcome'
 require 'tzu/validation'
 require 'tzu/validation_result'
@@ -18,7 +20,7 @@ module Tzu
   end
 
   def run(params)
-    run!(request_object(params))
+    run!(init_request_object(params))
   rescue Failure => f
     Outcome.new(false, f.errors, f.type)
   end
@@ -39,8 +41,8 @@ module Tzu
 
   private
 
-  def request_object(params)
-    request_klass = self.class.request_object
+  def init_request_object(params)
+    request_klass = self.class.request_klass
     return request_klass.new(params) if request_klass
     params
   end

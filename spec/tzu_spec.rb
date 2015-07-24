@@ -38,7 +38,7 @@ end
 class ValidatedCommand
   include Tzu
 
-  given MyRequestObject
+  request_object MyRequestObject
 
   def call(request)
     request.value
@@ -48,7 +48,7 @@ end
 class VirtusValidatedCommand
   include Tzu
 
-  given VirtusRequestObject
+  request_object VirtusRequestObject
 
   def call(request)
     "Name: #{request.name}, Age: #{request.age}"
