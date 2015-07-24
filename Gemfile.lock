@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tzu (0.0.2.0)
+    tzu (0.1.0.0)
 
 GEM
   remote: http://rubygems.org/

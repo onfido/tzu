@@ -57,8 +57,8 @@ When invoking Tzu with `#run!`, `invalid!` will throw a Tzu::Invalid error.
 outcome = MyCommand.run!(message: 'Hello!') #=> Tzu::Invalid: 'You did not do it'
 ```
 
-If you use `invalid!` while catching an exception, you can pass it the exception as an argument.
-The exception's `#message` value will be passed along the the outcome.
+If you use `invalid!` while catching an exception, you can pass the exception as an argument.
+The exception's `#message` value will be passed along to the outcome.
 
 ```ruby
 class MyRescueCommand
@@ -73,7 +73,8 @@ end
 ```
 
 ```ruby
-outcome = MyRescueCommand.run!(params_that_cause_error) #=> Tzu::Invalid: 'You did not do it'
+outcome = MyRescueCommand.run!(params_that_cause_error)
+#=> Tzu::Invalid: 'You did not do it'
 ```
 
 Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form:
@@ -166,7 +167,7 @@ class MyValidatedCommand
 end
 ```
 
-Request objects must implement an initializer that accepts the command's parameters hash.
+Request objects must implement an initializer that accepts the command's parameters.
 
 If you wish to validate your parameters, the Request object must implement `#valid?` and `#errors`.
 
@@ -248,7 +249,7 @@ class MakeMeSoundImportant
 end
 ```
 
-The Tzu::Sequence provides a DSL for executing them in sequence.
+The Tzu::Sequence provides a DSL for executing them in sequence:
 
 ```ruby
 class ProclaimMyImportance
@@ -275,7 +276,7 @@ Each command to be executed is defined as the first argument of `step`.
 The `receives` method inside the `step` block allows you to mutate the parameters being passed into the command.
 It is passed both the original parameters and a hash containing the results of prior commands.
 
-By default, the keys of the prior commands hash are underscored/symbolized command names.
+By default, the keys of the `prior_results` hash are underscored/symbolized command names.
 You can define your own keys using the `as` method.
 
 ```ruby
