@@ -19,14 +19,14 @@ Tzu provides a simple interface for writing classes that encapsulate a single co
 **Documentation**
 
 - [Usage](#usage)
-- [Validation][]
-- [Passing Blocks][]
-- [Before, After, and Around Hooks][]
-- [Request Objects][]
-- [Command Sequence - Configure][]
-- [Command Sequence - Execute][]
-- [Hooks for Sequences][]
-- [Mocking and Stubbing][]
+- [Validation](#validation)
+- [Passing Blocks](#passing-blocks)
+- [Hooks](#hooks)
+- [Request Objects](#request-objects)
+- [Configure Command Sequence](#configure-commands-sequence)
+- [Execute Command Sequence](#execute-commands-sequence)
+- [Hooks for Sequences](#hooks-for-sequences)
+- [Mocking and Stubbing](#mocking-and-stubbing)
 
 ## Usage
 
@@ -136,7 +136,7 @@ MyCommand.run(message: params[:message]) do
 end
 ```
 
-## Before, After, and Around Hooks
+## Hooks
 
 Tzu commands accept `before`, `after`, and `around` hooks.
 All hooks are executed in the order they are declared.
@@ -255,7 +255,7 @@ outcome.type? #=> :validation
 outcome.result #=> {:age=>["can't be blank"]}
 ```
 
-## Command Sequence - Configure
+## Configure Command Sequence
 
 Tzu provides a declarative way of encapsulating sequential command execution.
 
@@ -318,7 +318,7 @@ step SayMyName do
 end
 ```
 
-## Command Sequence - Execute
+## Execute Command Sequence
 
 By default, Sequences return the result of the final command within an Outcome object,
 
