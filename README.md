@@ -1,5 +1,33 @@
 # Tzu
 
+Tzu provides a simple interface for writing classes that encapsulate a single command.
+
+**Commands should:**
+
+- Do exactly one thing (Single Responsibility Priciple)
+- Be self-documenting
+- Be testable
+- Be easy to mock and stub
+
+**Benefits**
+
+- File and class names say what your code *actually does*, making onboarding and debugging a much simpler process.
+- Minimize the instances of persistence logic throughout the application
+- The Rails 'where do I put...?' question is solved. Models, Controllers, Workers and even Rake Tasks become slim.
+- Maintain all of the benefits of Object Oriented programming while executing a procedural action, or Sequence of procedural actions.
+
+**Documentation**
+
+- [Usage][]
+- [Validation][]
+- [Passing Blocks][]
+- [Before, After, and Around Hooks][]
+- [Request Objects][]
+- [Command Sequence - Configure][]
+- [Command Sequence - Execute][]
+- [Hooks for Sequences][]
+- [Mocking and Stubbing][]
+
 ## Usage
 
 Tzu commands must include Tzu and implement a `#call` method.
@@ -79,7 +107,11 @@ outcome = MyRescueCommand.run!(params_that_cause_error)
 
 Note that if you pass a string to `invalid!`, it will coerce the result into a hash of the form:
 
-```
+```ruby
+# Invoking:
+invalid!('Error String')
+
+# Translates to:
 { errors: 'Error String' }
 ```
 
@@ -104,7 +136,7 @@ MyCommand.run(message: params[:message]) do
 end
 ```
 
-## Hooks
+## Before, After, and Around Hooks
 
 Tzu commands accept `before`, `after`, and `around` hooks.
 All hooks are executed in the order they are declared.
@@ -149,9 +181,7 @@ MyCommand.run(message: 'Hello!')
 #=> End Around 1
 ```
 
-
-
-## Request objects
+## Request Objects
 
 You can define a request object for your command using the `#request_object` method.
 
@@ -225,7 +255,7 @@ outcome.type? #=> :validation
 outcome.result #=> {:age=>["can't be blank"]}
 ```
 
-# Configure a sequence of Tzu commands
+## Command Sequence - Configure
 
 Tzu provides a declarative way of encapsulating sequential command execution.
 
@@ -288,7 +318,7 @@ step SayMyName do
 end
 ```
 
-# Executing the sequence
+## Command Sequence - Execute
 
 By default, Sequences return the result of the final command within an Outcome object,
 
@@ -363,7 +393,7 @@ outcome.result
 #=> { name: 'Jessica', original_message: 'Hello, Jessica', message: 'BULLETIN: Hello, Jessica! You are the most important citizen of Azerbaijan!' }
 ```
 
-# Hooks for Sequences
+## Hooks for Sequences
 
 Tzu sequences have the same `before`, `after`, and `around` hooks available in Tzu commands.
 This is particularly useful for wrapping multiple commands in a transaction.
@@ -394,3 +424,7 @@ class ProclaimMyImportance
   end
 end
 ```
+
+## Mocking and Stubbing
+
+Tzu has a specialized (and well-documented) gem for mocking/stubbing, [TzuMock](https://github.com/onfido/tzu_mock).
