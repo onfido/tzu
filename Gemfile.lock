@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tzu (0.0.1.0)
+    tzu (0.1.0.0)
 
 GEM
   remote: http://rubygems.org/
@@ -20,12 +20,21 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     arel (6.0.0)
+    axiom-types (0.0.5)
+      descendants_tracker (~> 0.0.1)
+      ice_nine (~> 0.9)
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
+    coercible (1.0.0)
+      descendants_tracker (~> 0.0.1)
     columnize (0.9.0)
+    descendants_tracker (0.0.4)
+      thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
+    equalizer (0.0.11)
     i18n (0.7.0)
+    ice_nine (0.11.1)
     json (1.8.2)
     minitest (5.6.1)
     rspec (3.2.0)
@@ -45,6 +54,11 @@ GEM
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    virtus (1.0.1)
+      axiom-types (~> 0.0.5)
+      coercible (~> 1.0)
+      descendants_tracker (~> 0.0.1)
+      equalizer (~> 0.0.7)
 
 PLATFORMS
   ruby
@@ -57,3 +71,4 @@ DEPENDENCIES
   rspec (>= 2.4.0)
   sqlite3
   tzu!
+  virtus

@@ -1,5 +1,4 @@
 module Tzu
-
   # The result of executing a command
   class Outcome
     attr_reader :success, :result, :type

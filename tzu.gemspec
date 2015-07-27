@@ -3,7 +3,7 @@ require 'orm_adapter/version'
 
 Gem::Specification.new do |s|
   s.name = 'tzu'
-  s.version = '0.0.1.0'
+  s.version = '0.1.0.0'
   s.platform = Gem::Platform::RUBY
   s.authors = ['Morgan Bruce', 'Blake Turner']
   s.description = 'Tzu is a library for issuing commands in Ruby'
@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '>= 2.4.0'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'byebug'
+  s.add_development_dependency 'virtus'
 end
