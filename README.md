@@ -18,7 +18,7 @@ Tzu provides a simple interface for writing classes that encapsulate a single co
 
 **Documentation**
 
-- [Usage]()
+- [Usage](#usage)
 - [Validation][]
 - [Passing Blocks][]
 - [Before, After, and Around Hooks][]
