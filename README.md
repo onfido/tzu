@@ -23,8 +23,8 @@ Tzu provides a simple interface for writing classes that encapsulate a single co
 - [Passing Blocks](#passing-blocks)
 - [Hooks](#hooks)
 - [Request Objects](#request-objects)
-- [Configure Command Sequence](#configure-commands-sequence)
-- [Execute Command Sequence](#execute-commands-sequence)
+- [Configure Command Sequence](#configure-command-sequence)
+- [Execute Command Sequence](#execute-command-sequence)
 - [Hooks for Sequences](#hooks-for-sequences)
 - [Mocking and Stubbing](#mocking-and-stubbing)
 
