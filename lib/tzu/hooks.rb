@@ -37,12 +37,12 @@ module Tzu
       end
     end
 
-    def with_hooks(params, &block)
+    def with_hooks(*params, &block)
       result = nil
       run_around_hooks do
-        run_before_hooks(params)
-        result = yield(params)
-        run_after_hooks(params)
+        run_before_hooks(*params)
+        result = yield(*params)
+        run_after_hooks(*params)
       end
       result
     end

@@ -25,8 +25,8 @@ module Tzu
       end
     end
 
-    def method_missing(method, *args, &block)
-      @request_klass = args.first if method == :request_object
+    def request_object(klass)
+      @request_klass = klass
     end
   end
 end

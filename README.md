@@ -23,8 +23,11 @@ Tzu provides a simple interface for writing classes that encapsulate a single co
 - [Passing Blocks](#passing-blocks)
 - [Hooks](#hooks)
 - [Request Objects](#request-objects)
-- [Configure Command Sequence](#configure-command-sequence)
-- [Execute Command Sequence](#execute-command-sequence)
+
+**Sequences**
+- [Configure](#configure)
+- [Execute](#execute)
+- [Integrating Non Tzu Classes](#integrating-non-tzu-classes)
 - [Hooks for Sequences](#hooks-for-sequences)
 - [Mocking and Stubbing](#mocking-and-stubbing)
 
@@ -226,6 +229,7 @@ Virtus.model validates the types of your inputs, and also makes them available v
 class MyRequestObject
   include Virtus.model
   include ActiveModel::Validations
+
   validates :name, :age, presence: :true
 
   attribute :name, String
@@ -255,7 +259,9 @@ outcome.type? #=> :validation
 outcome.result #=> {:age=>["can't be blank"]}
 ```
 
-## Configure Command Sequence
+# Execute Commands in Sequence
+
+## Configure
 
 Tzu provides a declarative way of encapsulating sequential command execution.
 
@@ -279,7 +285,7 @@ class MakeMeSoundImportant
 end
 ```
 
-The Tzu::Sequence provides a DSL for executing them in sequence:
+Tzu::Sequence provides a DSL for executing them in sequence:
 
 ```ruby
 class ProclaimMyImportance
@@ -306,7 +312,7 @@ Each command to be executed is defined as the first argument of `step`.
 The `receives` method inside the `step` block allows you to mutate the parameters being passed into the command.
 It is passed both the original parameters and a hash containing the results of prior commands.
 
-By default, the keys of the `prior_results` hash are underscored/symbolized command names.
+By default, the keys of the `prior_results` hash are demodulized/underscored/symbolized command names.
 You can define your own keys using the `as` method.
 
 ```ruby
@@ -318,9 +324,15 @@ step SayMyName do
 end
 ```
 
-## Execute Command Sequence
+If you don't need to mutate the parameters for the command, simply omit `receives`.
 
-By default, Sequences return the result of the final command within an Outcome object,
+```ruby
+step SayMyName
+```
+
+## Execute
+
+By default, Sequences return the result of the final command.
 
 ```ruby
 outcome = ProclaimMyImportance.run(name: 'Jessica', country: 'Azerbaijan')
@@ -391,6 +403,94 @@ end
 outcome = ProclaimMyImportance.run(name: 'Jessica', country: 'Azerbaijan')
 outcome.result
 #=> { name: 'Jessica', original_message: 'Hello, Jessica', message: 'BULLETIN: Hello, Jessica! You are the most important citizen of Azerbaijan!' }
+```
+
+## Integrating Non Tzu Classes
+
+Sometimes there is a need to combine non-Tzu classes with Tzu classes in a sequence.
+
+As an example, let's say I wanted to query a record, update it, and pass the updated record to a Tzu command.
+To do this, I'll use the [Get](https://github.com/onfido/get) and [Tradesman](https://github.com/onfido/tradesman/) libraries.
+
+When invoked on its own, Get looks like this:
+```ruby
+Get::UserByName.run(name)
+```
+
+Tradesman Update looks like this:
+```ruby
+Tradesman::UpdateUser.go(user_id, update_params)
+```
+
+The integration of Get into `Tzu::Sequence` is easy, as it only expects one parameter, and it's invoked with `#run`.
+Tradesman is more complicated; it expects two parameters - a User ID and a hash to update that record with - and it's invoked with `#go`.
+
+Tradesman offers the `invoke_with` and `receives_many` arguments to deal with these differences.
+
+`invoke_with` is self-explanatory, and defaults to `#run`.
+
+The `receives_many` block must return an array, which will be passed as a splat to the `invoke_with` method.
+```ruby
+class NonTzuSequence
+  include Tzu::Sequence
+
+  step Get::UserByName do
+    receives do |params|
+      params[:name]
+    end
+  end
+
+  step Tradesman::UpdateUser do
+    invoke_with :go
+
+    receives_many do |params, prior_results|
+      [
+        prior_results[:user_by_name].id,
+        params[:update_params]
+      ]
+    end
+  end
+
+  step SayMyName do
+    receives do |params, prior_results|
+      prior_results[:update_user].name
+    end
+  end
+end
+
+outcome = NonTzuSequence.run(name: 'Blake', update_params: { name: 'Morgan' })
+outcome.result #=> 'Hello, Morgan'
+```
+
+You can pass multiple parameters to `Tzu::Sequence` instead of a parameters hash, just make sure you add the correct amount of arguments to your `receives` and `receives_many` blocks.
+
+```ruby
+class NonTzuSequence
+  include Tzu::Sequence
+
+  step Get::UserByName do
+    receives do |name, update_params|
+      name
+    end
+  end
+
+  step Tradesman::UpdateUser do
+    invoke_with :go
+
+    receives_many do |name, update_params, prior_results|
+      [prior_results[:user_by_name].id, update_params]
+    end
+  end
+
+  step SayMyName do
+    receives do |name, update_params, prior_results|
+      prior_results[:update_user].name
+    end
+  end
+end
+
+outcome = NonTzuSequence.run('Blake', { name: 'Morgan' })
+outcome.result #=> 'Hello, Morgan'
 ```
 
 ## Hooks for Sequences

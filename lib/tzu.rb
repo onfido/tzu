@@ -1,4 +1,5 @@
 require 'tzu/core_extensions/string'
+require 'tzu/errors'
 require 'tzu/run_methods'
 require 'tzu/failure'
 require 'tzu/hooks'
