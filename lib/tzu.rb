@@ -21,13 +21,13 @@ module Tzu
   end
 
   def run(params)
-    run!(init_request_object(params))
+    run!(params)
   rescue Failure => f
     Outcome.new(false, f.errors, f.type)
   end
 
   def run!(params)
-    with_hooks(params) do |p|
+    with_hooks(init_request_object(params)) do |p|
       outcome = call(p)
       outcome.is_a?(Tzu::Outcome) ? outcome : Outcome.new(true, outcome)
     end
