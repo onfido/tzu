@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tzu (0.1.0.0)
+    tzu (0.1.2.0)
 
 GEM
   remote: http://rubygems.org/
@@ -72,3 +72,6 @@ DEPENDENCIES
   sqlite3
   tzu!
   virtus
+
+BUNDLED WITH
+   1.10.6
