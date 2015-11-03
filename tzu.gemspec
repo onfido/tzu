@@ -1,5 +1,4 @@
 $:.push File.expand_path('../lib', __FILE__)
-require 'orm_adapter/version'
 
 Gem::Specification.new do |s|
   s.name = 'tzu'
