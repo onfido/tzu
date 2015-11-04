@@ -4,7 +4,7 @@ Tzu provides a simple interface for writing classes that encapsulate a single co
 
 **Commands should:**
 
-- Do exactly one thing (Single Responsibility Priciple)
+- Do exactly one thing (Single Responsibility Principle)
 - Be self-documenting
 - Be testable
 - Be easy to mock and stub
