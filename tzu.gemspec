@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
   s.test_files    = Dir.glob("{spec}/**/*")
   s.require_paths = ['lib']
 
+  s.required_ruby_version = '>= 2.3'
+
   s.add_dependency 'json', '~> 1.8.5'
 
   s.add_development_dependency 'bundler', '>= 1.0.0'
