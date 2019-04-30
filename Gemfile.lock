@@ -76,8 +76,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (>= 3.2.15)
-  activesupport (>= 3.2.15)
+  activerecord (>= 4.2.7.1)
+  activesupport (>= 4.2.7.1)
   bundler (>= 1.0.0)
   bundler-audit
   byebug
