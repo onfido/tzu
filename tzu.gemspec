@@ -2,7 +2,7 @@ $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name = 'tzu'
-  s.version = '0.1.2.0'
+  s.version = '0.1.3.0'
   s.platform = Gem::Platform::RUBY
   s.authors = ['Morgan Bruce', 'Blake Turner']
   s.description = 'Tzu is a library for issuing commands in Ruby'

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tzu (0.1.2.0)
+    tzu (0.1.3.0)
       json (~> 1.8.5)
 
 GEM
