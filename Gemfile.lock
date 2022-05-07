@@ -61,7 +61,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 5)
-  bundler (>= 1.0.0)
   byebug
   rake
   rspec
@@ -70,4 +69,4 @@ DEPENDENCIES
   virtus
 
 BUNDLED WITH
-   1.17.2
+   2.3.13
