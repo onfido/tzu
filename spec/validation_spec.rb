@@ -1,6 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe Tzu::Validation do
+RSpec.describe Tzu::Validation do
 
   context 'params define valid? method' do
     subject do

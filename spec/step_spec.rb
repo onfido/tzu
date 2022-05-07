@@ -1,6 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe Tzu::Step do
+RSpec.describe Tzu::Step do
   let(:dummy_mutator) { proc { 'Dummy!' } }
 
   context '#name' do

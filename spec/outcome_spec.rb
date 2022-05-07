@@ -1,7 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe Tzu::Outcome do
-
+RSpec.describe Tzu::Outcome do
   context 'outcome is failed with specified type' do
     subject { Tzu::Outcome.new(false, 'abc', :validation) }
 

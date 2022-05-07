@@ -1,4 +1,7 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require 'virtus'
+require 'active_record'
 
 class ControlledOutcome
   include Tzu
@@ -55,7 +58,7 @@ class VirtusValidatedCommand
   end
 end
 
-describe Tzu do
+RSpec.describe Tzu do
   context '#run' do
     context 'when command succeeds' do
       let(:outcome) { ControlledOutcome.run(result: :success) }

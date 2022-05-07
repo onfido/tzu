@@ -1,6 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe Tzu::Hooks do
+RSpec.describe Tzu::Hooks do
   describe '#with_hooks' do
     def build_hooked(&block)
       hooked = Class.new.send(:include, Tzu::Hooks)
