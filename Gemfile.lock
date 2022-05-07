@@ -61,7 +61,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 5)
-  activesupport (~> 5)
   bundler (>= 1.0.0)
   byebug
   rake
