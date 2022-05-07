@@ -1,4 +1,4 @@
-# Tzu [![Build Status](https://travis-ci.org/onfido/tzu.svg)](https://travis-ci.org/onfido/tzu) [![Code Climate](https://codeclimate.com/github/onfido/tzu/badges/gpa.svg)](https://codeclimate.com/github/onfido/tzu) [![Test Coverage](https://codeclimate.com/github/onfido/tzu/badges/coverage.svg)](https://codeclimate.com/github/onfido/tzu/coverage)
+# Tzu
 
 Tzu provides a simple interface for writing classes that encapsulate a single command.
 
