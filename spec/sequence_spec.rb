@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require 'active_record'
 
 class SayMyName
   include Tzu
@@ -139,7 +141,7 @@ class MultiStepInvalid
   end
 end
 
-describe Tzu::Sequence do
+RSpec.describe Tzu::Sequence do
   context '#steps' do
     context MultiStepSimple do
       let(:steps) { MultiStepSimple.steps }

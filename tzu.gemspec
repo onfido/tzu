@@ -15,10 +15,8 @@ Gem::Specification.new do |s|
   s.test_files    = Dir.glob("{spec}/**/*")
   s.require_paths = ['lib']
 
-  s.add_development_dependency 'bundler', '>= 1.0.0'
-  s.add_development_dependency 'activerecord', '>= 3.2.15'
-  s.add_development_dependency 'activesupport', '>= 3.2.15'
-  s.add_development_dependency 'rspec', '>= 2.4.0'
+  s.add_development_dependency 'activerecord', '~> 5'
+  s.add_development_dependency 'rspec'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'virtus'
