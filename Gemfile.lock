@@ -49,7 +49,7 @@ GEM
     rspec-support (3.11.0)
     sqlite3 (1.4.2)
     thread_safe (0.3.6)
-    tzinfo (1.2.9)
+    tzinfo (1.2.11)
       thread_safe (~> 0.1)
     virtus (2.0.0)
       axiom-types (~> 0.1)
