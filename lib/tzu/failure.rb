@@ -8,7 +8,7 @@ module Tzu
     end
 
     def errors
-      string_error? ? { errors: @raw_errors } : @raw_errors
+      string_error? ? {errors: @raw_errors} : @raw_errors
     end
 
     def message

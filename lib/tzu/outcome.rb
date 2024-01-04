@@ -17,10 +17,10 @@ module Tzu
       !@success
     end
 
-    def handle(context=nil, &block)
-      context ||= block.binding.eval('self')
+    def handle(context = nil, &block)
+      context ||= block.binding.eval("self")
       match = Match.new(self, context)
-      match.instance_eval &block
+      match.instance_eval(&block)
       match.result
     end
   end

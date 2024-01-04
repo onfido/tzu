@@ -1,10 +1,10 @@
-require 'active_support'
-require 'active_support/core_ext/object/blank'
-require 'active_support/core_ext/string/inflections'
+require "active_support"
+require "active_support/core_ext/object/blank"
+require "active_support/core_ext/string/inflections"
 
 module Tzu
   class Step
-    DOUBLE_MUTATOR = 'You cannot define both receives and receives_many'
+    DOUBLE_MUTATOR = "You cannot define both receives and receives_many"
 
     attr_reader :klass, :single_mutator, :splat_mutator
 
@@ -24,8 +24,9 @@ module Tzu
     end
 
     def name
-      return @name if @name && @name.is_a?(Symbol)
-      @klass.to_s.split('::').last.underscore.to_sym
+      return @name if @name&.is_a?(Symbol)
+
+      @klass.to_s.split("::").last.underscore.to_sym
     end
 
     def receives(&block)

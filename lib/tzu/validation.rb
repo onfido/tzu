@@ -1,6 +1,5 @@
 module Tzu
   module Validation
-
     def self.included(base)
       base.class_eval do
         # registers validation as a before hook
@@ -21,7 +20,7 @@ module Tzu
 
     def invalid!(obj)
       output = [:errors, :messages, :message].reduce(obj) do |result, m|
-        result = result.respond_to?(m) ? result.send(m) : result
+        result.respond_to?(m) ? result.send(m) : result
       end
 
       raise Invalid.new(output)

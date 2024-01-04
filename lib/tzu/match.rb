@@ -1,5 +1,4 @@
 module Tzu
-
   # with thanks to https://github.com/pzol/deterministic
   class Match
     def initialize(outcome, context)
@@ -12,15 +11,15 @@ module Tzu
       @context.instance_exec(@outcome.result, &matcher.block)
     end
 
-    %w(success failure).each do |type|
-      define_method type.to_sym do |condition=nil, &result_block|
+    %w[success failure].each do |type|
+      define_method type.to_sym do |condition = nil, &result_block|
         push(type, condition, result_block)
       end
     end
 
     # todo: hash and define_method if more overrides identified
     def invalid(&result_block)
-      push('failure', :validation, result_block)
+      push("failure", :validation, result_block)
     end
 
     private
@@ -32,12 +31,15 @@ module Tzu
     end
 
     def push(type, condition, result_block)
-      condition_pred = case
-                         when condition.nil?;          ->(v) { true }
-                         when condition.is_a?(Proc);   condition
-                         when condition.is_a?(Class);  ->(v) { condition === @outcome.type }
-                         else                          ->(v) { @outcome.type == condition }
-                       end
+      condition_pred = if condition.nil?
+        ->(v) { true }
+      elsif condition.is_a?(Proc)
+        condition
+      elsif condition.is_a?(Class)
+        ->(v) { condition === @outcome.type }
+      else
+        ->(v) { @outcome.type == condition }
+      end
 
       matcher_pred = compose_predicates(type_pred[type], condition_pred)
       @collection << Matcher.new(matcher_pred, result_block)
@@ -49,7 +51,7 @@ module Tzu
 
     # return a partial function for matching a matcher's type
     def type_pred
-      (->(type, x) { @outcome.send("#{type.to_s}?") }).curry
+      ->(type, x) { @outcome.send(:"#{type}?") }.curry
     end
   end
 end

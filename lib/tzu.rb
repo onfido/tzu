@@ -1,14 +1,14 @@
-require 'tzu/errors'
-require 'tzu/run_methods'
-require 'tzu/failure'
-require 'tzu/hooks'
-require 'tzu/invalid'
-require 'tzu/match'
-require 'tzu/sequence'
-require 'tzu/step'
-require 'tzu/outcome'
-require 'tzu/validation'
-require 'tzu/validation_result'
+require "tzu/errors"
+require "tzu/run_methods"
+require "tzu/failure"
+require "tzu/hooks"
+require "tzu/invalid"
+require "tzu/match"
+require "tzu/sequence"
+require "tzu/step"
+require "tzu/outcome"
+require "tzu/validation"
+require "tzu/validation_result"
 
 module Tzu
   def self.included(base)
@@ -31,7 +31,7 @@ module Tzu
       outcome.is_a?(Tzu::Outcome) ? outcome : Outcome.new(true, outcome)
     end
   rescue
-    rollback! if self.respond_to?(:rollback!)
+    rollback! if respond_to?(:rollback!)
     raise
   end
 

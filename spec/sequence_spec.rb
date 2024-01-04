@@ -20,7 +20,7 @@ class ThrowInvalidError
   include Tzu
 
   def call(params)
-    invalid!('Who am I? Why am I here?')
+    invalid!("Who am I? Why am I here?")
   end
 end
 
@@ -37,7 +37,7 @@ class MultiStepSimple
 
   step SayMyName do
     receives do |params|
-      { name: params[:name] }
+      {name: params[:name]}
     end
   end
 
@@ -125,7 +125,7 @@ class MultiStepInvalid
 
   step ThrowInvalidError do
     receives do |params, prior_results|
-      { answer: "#{params[:name]}!!! #{prior_results[:say_my_name]}" }
+      {answer: "#{params[:name]}!!! #{prior_results[:say_my_name]}"}
     end
   end
 
@@ -140,35 +140,35 @@ class MultiStepInvalid
 end
 
 RSpec.describe Tzu::Sequence do
-  context '#steps' do
+  describe "#steps" do
     context MultiStepSimple do
       let(:steps) { MultiStepSimple.steps }
 
-      it 'returns array of Steps' do
-        steps.each { |step| expect(step.is_a? Tzu::Step).to be true }
+      it "returns array of Steps" do
+        steps.each { |step| expect(step.is_a?(Tzu::Step)).to be true }
       end
 
-      it 'passes the appropriate klass, name, and param_mutators to each step' do
+      it "passes the appropriate klass, name, and param_mutators to each step" do
         say_my_name = steps.first
         expect(say_my_name.klass).to eq SayMyName
         expect(say_my_name.name).to eq :say_my_name
-        expect(say_my_name.single_mutator.is_a? Proc).to be true
+        expect(say_my_name.single_mutator.is_a?(Proc)).to be true
 
         make_me_sound_important = steps.last
         expect(make_me_sound_important.klass).to eq MakeMeSoundImportant
         expect(make_me_sound_important.name).to eq :make_me_sound_important
-        expect(make_me_sound_important.single_mutator.is_a? Proc).to be true
+        expect(make_me_sound_important.single_mutator.is_a?(Proc)).to be true
       end
     end
 
     context MultiStepComplex do
       let(:steps) { MultiStepComplex.steps }
 
-      it 'returns array of Steps' do
-        steps.each { |step| expect(step.is_a? Tzu::Step).to be true }
+      it "returns array of Steps" do
+        steps.each { |step| expect(step.is_a?(Tzu::Step)).to be true }
       end
 
-      it 'passes the appropriate klass, name, and param_mutators to each step' do
+      it "passes the appropriate klass, name, and param_mutators to each step" do
         say_my_name = steps.first
         expect(say_my_name.klass).to eq SayMyName
         expect(say_my_name.name).to eq :first_command
@@ -176,56 +176,56 @@ RSpec.describe Tzu::Sequence do
         make_me_sound_important = steps.last
         expect(make_me_sound_important.klass).to eq MakeMeSoundImportant
         expect(make_me_sound_important.name).to eq :final_command
-        expect(make_me_sound_important.single_mutator.is_a? Proc).to be true
+        expect(make_me_sound_important.single_mutator.is_a?(Proc)).to be true
       end
     end
   end
 
-  context '#run' do
+  describe "#run" do
     let(:params) do
       {
-        name: 'Jessica',
-        country: 'Azerbaijan'
+        name: "Jessica",
+        country: "Azerbaijan"
       }
     end
 
     context MultiStepSimple do
-      it 'returns the outcome of the last command' do
+      it "returns the outcome of the last command" do
         outcome = MultiStepSimple.run(params)
-        expect(outcome.result).to eq 'Hello, Jessica! You are the most important citizen of Azerbaijan!'
+        expect(outcome.result).to eq "Hello, Jessica! You are the most important citizen of Azerbaijan!"
       end
     end
 
     context MultiStepNonTzu do
-      it 'returns the outcome of the last command' do
-        outcome = MultiStepNonTzu.run('Greetings', 'Christopher', 'Canada')
-        expect(outcome.result).to eq 'Greetings, Christopher! You are the most important citizen of Canada!'
+      it "returns the outcome of the last command" do
+        outcome = MultiStepNonTzu.run("Greetings", "Christopher", "Canada")
+        expect(outcome.result).to eq "Greetings, Christopher! You are the most important citizen of Canada!"
       end
     end
 
     context MultiStepComplex do
-      it 'returns the outcome of the last command' do
+      it "returns the outcome of the last command" do
         outcome = MultiStepComplex.run(params)
         results = outcome.result
-        expect(results[:first_command]).to eq 'Hello, Jessica'
-        expect(results[:final_command]).to eq 'Hello, Jessica! You are the most important citizen of Azerbaijan!'
+        expect(results[:first_command]).to eq "Hello, Jessica"
+        expect(results[:final_command]).to eq "Hello, Jessica! You are the most important citizen of Azerbaijan!"
       end
     end
 
     context MultiStepProcessResults do
-      it 'returns the outcome of the last command' do
+      it "returns the outcome of the last command" do
         outcome = MultiStepProcessResults.run(params)
         result = outcome.result
         expect(result[:status]).to eq :important
-        expect(result[:message]).to eq 'BULLETIN: Hello, Jessica! You are the most important citizen of Azerbaijan!'
+        expect(result[:message]).to eq "BULLETIN: Hello, Jessica! You are the most important citizen of Azerbaijan!"
       end
     end
 
     context MultiStepInvalid do
-      it 'stops its execution at the invalid command, which it returns' do
+      it "stops its execution at the invalid command, which it returns" do
         outcome = MultiStepInvalid.run(params)
         expect(outcome.success?).to be false
-        expect(outcome.result).to eq(errors: 'Who am I? Why am I here?')
+        expect(outcome.result).to eq(errors: "Who am I? Why am I here?")
       end
     end
   end

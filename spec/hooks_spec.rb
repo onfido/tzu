@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Tzu::Hooks do
-  describe '#with_hooks' do
+  describe "#with_hooks" do
     def build_hooked(&block)
       hooked = Class.new.send(:include, Tzu::Hooks)
 
@@ -25,7 +25,7 @@ RSpec.describe Tzu::Hooks do
       hooked
     end
 
-    context 'when before hook is a method' do
+    context "when before hook is a method" do
       let(:hooked) do
         build_hooked do
           before :add_before
@@ -36,12 +36,12 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs the before hook method' do
+      it "runs the before hook method" do
         expect(hooked.process).to eq([:before, :process])
       end
     end
 
-    context 'when before hook is a block' do
+    context "when before hook is a block" do
       let(:hooked) do
         build_hooked do
           before do
@@ -50,12 +50,12 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs the before hook block' do
+      it "runs the before hook block" do
         expect(hooked.process).to eq([:before, :process])
       end
     end
 
-    context 'when after hook is a method' do
+    context "when after hook is a method" do
       let(:hooked) do
         build_hooked do
           after :add_after
@@ -66,12 +66,12 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs the after hook method' do
+      it "runs the after hook method" do
         expect(hooked.process).to eq([:process, :after])
       end
     end
 
-    context 'when after hook is a block' do
+    context "when after hook is a block" do
       let(:hooked) do
         build_hooked do
           after do
@@ -80,12 +80,12 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs the after hook block' do
+      it "runs the after hook block" do
         expect(hooked.process).to eq([:process, :after])
       end
     end
 
-    context 'when both before and after blocks are defined' do
+    context "when both before and after blocks are defined" do
       let(:hooked) do
         build_hooked do
           before do
@@ -98,13 +98,12 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs hooks in the expected order' do
+      it "runs hooks in the expected order" do
         expect(hooked.process).to eq([:before, :process, :after])
       end
     end
 
-
-    context 'when both before and after methods are defined' do
+    context "when both before and after methods are defined" do
       let(:hooked) do
         build_hooked do
           before :add_before
@@ -120,12 +119,12 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs hooks in the expected order' do
+      it "runs hooks in the expected order" do
         expect(hooked.process).to eq([:before, :process, :after])
       end
     end
 
-    context 'when multiple before methods are defined' do
+    context "when multiple before methods are defined" do
       let(:hooked) do
         build_hooked do
           before :add_before1, :add_before2
@@ -140,12 +139,12 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs hooks in the expected order' do
+      it "runs hooks in the expected order" do
         expect(hooked.process).to eq([:before1, :before2, :process])
       end
     end
 
-    context 'when multiple after methods are defined' do
+    context "when multiple after methods are defined" do
       let(:hooked) do
         build_hooked do
           after :add_after1, :add_after2
@@ -160,10 +159,9 @@ RSpec.describe Tzu::Hooks do
         end
       end
 
-      it 'runs hooks in the expected order' do
+      it "runs hooks in the expected order" do
         expect(hooked.process).to eq([:process, :after1, :after2])
       end
     end
-
   end
 end
