@@ -21,7 +21,7 @@ module Tzu
       if value.nil?
         @name ||= name.underscore.to_sym
       else
-        @name = (value.presence && value.to_sym)
+        @name = value.presence && value.to_sym
       end
     end
 

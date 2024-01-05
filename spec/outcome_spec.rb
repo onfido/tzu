@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Tzu::Outcome do
-  context 'outcome is failed with specified type' do
-    subject { Tzu::Outcome.new(false, 'abc', :validation) }
+  context "outcome is failed with specified type" do
+    subject { Tzu::Outcome.new(false, "abc", :validation) }
 
-    it 'calls appropriate handler' do
+    it "calls appropriate handler" do
       matched = false
       subject.handle do
         success { raise }
@@ -15,10 +15,10 @@ RSpec.describe Tzu::Outcome do
     end
   end
 
-  context 'outcome is failed with unspecified type' do
-    subject { Tzu::Outcome.new(false, 'abc', :validation) }
+  context "outcome is failed with unspecified type" do
+    subject { Tzu::Outcome.new(false, "abc", :validation) }
 
-    it 'calls appropriate handler' do
+    it "calls appropriate handler" do
       matched = false
       subject.handle do
         success { raise }
@@ -29,10 +29,10 @@ RSpec.describe Tzu::Outcome do
     end
   end
 
-  context 'outcome is successful' do
-    subject { Tzu::Outcome.new(true, 'abc') }
+  context "outcome is successful" do
+    subject { Tzu::Outcome.new(true, "abc") }
 
-    it 'calls success handler' do
+    it "calls success handler" do
       matched = false
       subject.handle do
         success { matched = true }
@@ -42,6 +42,3 @@ RSpec.describe Tzu::Outcome do
     end
   end
 end
-
-
-

@@ -1,5 +1,4 @@
 module Tzu
-
   # Provides hooks for arbitrary pre- and post- processing within a command
   module Hooks
     def self.included(base)

@@ -21,7 +21,7 @@ module Tzu
           end
 
           def step(klass, &block)
-            @steps = [] unless @steps
+            @steps ||= []
 
             step = Step.new(klass)
             step.instance_eval(&block) if block
@@ -56,7 +56,7 @@ module Tzu
         private
 
         def last_outcome_is_failure?
-          return true if (@last_outcome.respond_to?(:failure?) && @last_outcome.failure?)
+          return true if @last_outcome.respond_to?(:failure?) && @last_outcome.failure?
           false
         end
 
