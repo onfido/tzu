@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     tzu (1.0.0)
-      activesupport
+      activesupport (>= 4.2, < 8)
 
 GEM
   remote: http://rubygems.org/

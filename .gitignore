@@ -2,3 +2,4 @@
 .ruby-version
 .rspec_status
 gemfiles/.bundle/
+*.gem
