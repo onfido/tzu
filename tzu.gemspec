@@ -16,5 +16,5 @@ Gem::Specification.new do |s|
   s.files = Dir.glob("lib/**/*") + %w[LICENSE.txt README.md]
   s.require_paths = ["lib"]
 
-  s.add_dependency "activesupport"
+  s.add_dependency "activesupport", ">= 4.2", "< 8"
 end
