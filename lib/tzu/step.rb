@@ -1,8 +1,11 @@
+require 'active_support'
+require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/string/inflections'
+
 module Tzu
   class Step
     DOUBLE_MUTATOR = 'You cannot define both receives and receives_many'
 
-    String.send(:include, ::Tzu::CoreExtensions::String)
     attr_reader :klass, :single_mutator, :splat_mutator
 
     def initialize(klass)
@@ -22,7 +25,7 @@ module Tzu
 
     def name
       return @name if @name && @name.is_a?(Symbol)
-      @klass.to_s.split('::').last.symbolize
+      @klass.to_s.split('::').last.underscore.to_sym
     end
 
     def receives(&block)
