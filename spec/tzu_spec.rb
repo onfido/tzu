@@ -194,7 +194,17 @@ RSpec.describe Tzu do
         end
 
         it "returns ActiveModel error object" do
-          expect(outcome.result).to eq(age: ["can't be blank"])
+          # Starting with Rails 6.1, the 'ActiveModel#errors' returns a list if
+          # structured 'ActiveModel::Error':
+          # https://github.com/rails/rails/pull/32313
+          if ActiveModel.gem_version < Gem::Version.new("6.1")
+            expect(outcome.result).to eq(age: ["can't be blank"])
+          else
+            expect(outcome.result.size).to eq 1
+            expect(outcome.result.first.attribute).to eq :age
+            expect(outcome.result.first.type).to eq :blank
+            expect(outcome.result.first.message).to eq "can't be blank"
+          end
         end
       end
     end

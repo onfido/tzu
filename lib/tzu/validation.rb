@@ -15,6 +15,7 @@ module Tzu
 
     def validate(params)
       return ValidationResult.new(params.valid?, params.errors) if params.respond_to?(:valid?)
+
       ValidationResult.new(true)
     end
 
