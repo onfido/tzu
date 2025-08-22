@@ -20,7 +20,7 @@ module Tzu
     end
 
     def invalid!(obj)
-      methods = (rails_6_1_active_model?(obj) ? [] : [:errors]) + [:messages, :message]
+      methods = (rails_6_1_active_model_errors?(obj) ? [] : [:errors]) + [:messages, :message]
       output = methods.reduce(obj) do |result, m|
         result.respond_to?(m) ? result.send(m) : result
       end
@@ -39,7 +39,7 @@ module Tzu
     # https://github.com/rails/rails/pull/32313. To ensure the same
     # outcome as with previous rails versions, we forbid any calls to
     # `ActiveModel::Errors#errors`.
-    def rails_6_1_active_model?(obj)
+    def rails_6_1_active_model_errors?(obj)
       return false unless defined?(ActiveModel)
 
       obj.is_a?(ActiveModel::Errors) && obj.respond_to?(:errors)
