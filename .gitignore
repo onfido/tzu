@@ -2,4 +2,5 @@
 .ruby-version
 .rspec_status
 gemfiles/.bundle/
+gemfiles/*.gemfile.lock
 *.gem

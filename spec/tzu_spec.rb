@@ -9,8 +9,16 @@ class ControlledOutcome
   def call(params)
     result = params[:result]
     return 123 if result == :success
-    return invalid!("Invalid Message") if result == :invalid
-    fail!(:falure_type, "Failure Message") if result == :failure
+
+    case result
+    when :invalid
+      invalid!("Invalid Message")
+    when :invalid_active_model
+      obj = VirtusRequestObject.new
+      invalid!(obj) unless obj.valid?
+    when :failure
+      fail!(:failure_type, "Failure Message")
+    end
   end
 end
 
@@ -59,14 +67,25 @@ class VirtusValidatedCommand
 end
 
 RSpec.describe Tzu do
+  shared_examples "a success command" do
+    it "correctly returns sets pass/fail flags" do
+      expect(outcome.success?).to be true
+      expect(outcome.failure?).to be false
+    end
+  end
+
+  shared_examples "a failed command" do
+    it "correctly returns sets pass/fail flags" do
+      expect(outcome.success?).to be false
+      expect(outcome.failure?).to be true
+    end
+  end
+
   describe "#run" do
     context "when command succeeds" do
       let(:outcome) { ControlledOutcome.run(result: :success) }
 
-      it "correctly returns sets pass/fail flags" do
-        expect(outcome.success?).to be true
-        expect(outcome.failure?).to be false
-      end
+      it_behaves_like "a success command"
 
       it "returns result" do
         expect(outcome.result).to eq(123)
@@ -76,10 +95,7 @@ RSpec.describe Tzu do
     context "when command is invalid" do
       let(:outcome) { ControlledOutcome.run(result: :invalid) }
 
-      it "correctly returns sets pass/fail flags" do
-        expect(outcome.success?).to be false
-        expect(outcome.failure?).to be true
-      end
+      it_behaves_like "a failed command"
 
       it "returns error string as errors hash" do
         expect(outcome.result).to eq(errors: "Invalid Message")
@@ -93,17 +109,29 @@ RSpec.describe Tzu do
     context "when command fails" do
       let(:outcome) { ControlledOutcome.run(result: :failure) }
 
-      it "correctly returns sets pass/fail flags" do
-        expect(outcome.success?).to be false
-        expect(outcome.failure?).to be true
-      end
+      it_behaves_like "a failed command"
 
       it "returns error string as errors hash" do
         expect(outcome.result).to eq(errors: "Failure Message")
       end
 
-      it "sets type to falure_type" do
-        expect(outcome.type).to eq(:falure_type)
+      it "sets type to failure_type" do
+        expect(outcome.type).to eq(:failure_type)
+      end
+    end
+
+    context "when invalid! is called with an ActiveModel" do
+      let(:outcome) { ControlledOutcome.run(result: :invalid_active_model) }
+
+      it_behaves_like "a failed command"
+
+      it "returns error string as errors hash" do
+        expect(outcome.result)
+          .to eq(age: ["can't be blank"], name: ["can't be blank"])
+      end
+
+      it "sets type to failure_type" do
+        expect(outcome.type).to eq(:validation)
       end
     end
   end
@@ -194,17 +222,7 @@ RSpec.describe Tzu do
         end
 
         it "returns ActiveModel error object" do
-          # Starting with Rails 6.1, the 'ActiveModel#errors' returns a list if
-          # structured 'ActiveModel::Error':
-          # https://github.com/rails/rails/pull/32313
-          if ActiveModel.gem_version < Gem::Version.new("6.1")
-            expect(outcome.result).to eq(age: ["can't be blank"])
-          else
-            expect(outcome.result.size).to eq 1
-            expect(outcome.result.first.attribute).to eq :age
-            expect(outcome.result.first.type).to eq :blank
-            expect(outcome.result.first.message).to eq "can't be blank"
-          end
+          expect(outcome.result).to eq(age: ["can't be blank"])
         end
       end
     end
