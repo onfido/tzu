@@ -1,15 +1,15 @@
 PATH
   remote: .
   specs:
-    tzu (1.1.0)
-      activesupport (>= 4.2, < 8)
+    tzu (1.2.0)
+      activesupport (>= 4.2, < 9)
 
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (7.2.2.2)
-      activesupport (= 7.2.2.2)
-    activesupport (7.2.2.2)
+    activemodel (8.0.2.1)
+      activesupport (= 8.0.2.1)
+    activesupport (8.0.2.1)
       base64
       benchmark (>= 0.3)
       bigdecimal
@@ -21,6 +21,7 @@ GEM
       minitest (>= 5.1)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
+      uri (>= 0.13.1)
     appraisal (2.5.0)
       bundler
       rake
@@ -59,6 +60,7 @@ GEM
     lint_roller (1.1.0)
     logger (1.7.0)
     minitest (5.25.5)
+    ostruct (0.6.1)
     parallel (1.27.0)
     parser (3.3.9.0)
       ast (~> 2.4.1)
@@ -132,6 +134,7 @@ GEM
     unicode-display_width (3.1.5)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
+    uri (1.0.3)
     virtus (2.0.0)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -146,6 +149,7 @@ DEPENDENCIES
   debug
   irb
   logger
+  ostruct
   rake
   rspec
   rubocop
@@ -154,4 +158,4 @@ DEPENDENCIES
   virtus
 
 BUNDLED WITH
-   2.4.22
+   2.7.1

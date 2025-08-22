@@ -13,3 +13,7 @@ end
 appraise "rails-7" do
   gem "activemodel", "~> 7.1"
 end
+
+appraise "rails-8" do
+  gem "activemodel", "~> 8.0"
+end
