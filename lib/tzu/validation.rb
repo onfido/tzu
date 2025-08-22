@@ -20,7 +20,8 @@ module Tzu
     end
 
     def invalid!(obj)
-      output = [:errors, :messages, :message].reduce(obj) do |result, m|
+      methods = (rails_6_1_active_model?(obj) ? [] : [:errors]) + [:messages, :message]
+      output = methods.reduce(obj) do |result, m|
         result.respond_to?(m) ? result.send(m) : result
       end
 
@@ -29,6 +30,19 @@ module Tzu
 
     def fail!(type, data = {})
       raise Failure.new(type, data)
+    end
+
+    private
+
+    # Starting with Rails 6.1, the 'ActiveModel::Errors#errors'
+    # returns a list of structured 'ActiveModel::Error':
+    # https://github.com/rails/rails/pull/32313. To ensure the same
+    # outcome as with previous rails versions, we forbid any calls to
+    # `ActiveModel::Errors#errors`.
+    def rails_6_1_active_model?(obj)
+      return false unless defined?(ActiveModel)
+
+      obj.is_a?(ActiveModel::Errors) && obj.respond_to?(:errors)
     end
   end
 end

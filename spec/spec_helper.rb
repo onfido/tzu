@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+# According to this bug (https://github.com/rails/rails/issues/54260),
+# `concurrent-ruby` does not require `logger` anymore which leads to
+# this error:
+#   Failure/Error: require "active_support"
+#
+#   NameError:
+#     uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger
+#
+# This has been fixed in Rails 7.0+ but not in Rails 6 series. The
+# workaround is to manually require it.
+require "logger"
+
 require "tzu"
 
 RSpec.configure do |config|
